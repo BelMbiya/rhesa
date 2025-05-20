@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('role');
             $table->timestamp('lastlogin')->nullable();
             $table->string('status')->default('actif');
             $table->foreignId('hotel_id')->nullable()->constrained()->nullOnDelete();

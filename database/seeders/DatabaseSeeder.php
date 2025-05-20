@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
         $this->call(GenderSeeder::class);
         $this->call(IdentityTypeSeeder::class);
         $this->call(RolesAndPermissionsSeeder::class);
+        $this->call(UserSeeder::class);
 
         /*User::factory()->create([
             'name' => 'Test User',

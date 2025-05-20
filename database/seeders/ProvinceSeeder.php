@@ -45,8 +45,6 @@ class ProvinceSeeder extends Seeder
         foreach ($provinces as $province) {
             DB::table('provinces')->insert([
                 'name' => $province,
-                'created_at' => now(),
-                'updated_at' => now(),
             ]);
         }
     }

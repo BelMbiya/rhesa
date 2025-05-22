@@ -1,8 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Livewire\FormStepper;
 
 Route::view('/', 'welcome');
+Route::get('/enregistrement', FormStepper::class)
+    ->name('form-stepper');
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])

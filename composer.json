@@ -12,8 +12,11 @@
         "php": "^8.2",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
+        "livewire/flux": "^2.1",
         "livewire/livewire": "^3.4",
         "livewire/volt": "^1.7.0",
+        "rappasoft/laravel-livewire-tables": "^3.7",
+        "simplesoftwareio/simple-qrcode": "^4.2",
         "spatie/laravel-permission": "^6.18"
     },
     "require-dev": {
@@ -80,5 +83,8 @@
         }
     },
     "minimum-stability": "stable",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "repositories": {
+
+    }
 }

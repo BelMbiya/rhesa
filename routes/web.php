@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\Hotelshow;
 use App\Livewire\HotelTable;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\FormStepper;
@@ -15,7 +16,7 @@ Route::view('dashboard', 'dashboard')
 Route::get('hotels', HotelTable::class)
     ->middleware(['auth', 'verified'])
     ->name('hotels');
-Route::get('hotel/{slug}', HotelTable::class)
+Route::get('hotel/{slug}', hotelshow::class)
     ->middleware(['auth', 'verified'])
     ->name('hotel');
 

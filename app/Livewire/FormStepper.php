@@ -12,11 +12,13 @@ use Illuminate\Support\Facades\DB;
 
 class FormStepper extends Component
 {
+    
     use WithFileUploads;
 
     public $currentStep = 1;
     public $genres_id = [];
     public $gender_id;
+    public string $slug;
 
     // Champs Client
     public $First_name, $prenom, $date_naissance, $lieu_naissance,
@@ -33,8 +35,9 @@ class FormStepper extends Component
     public $date_enregistrement, $numero_enregistrement, $hotel_id, $id, $heure_enregistrement, $observations, $signature, $next_destination;
 
 
-    public function mount()
+    public function mount($slug)
     {
+        $this->slug = $slug;
         $this->genres_id = \App\Models\Gender::all();
     }
 

@@ -36,7 +36,7 @@ class HotelSeeder extends Seeder
             $slug = Str::slug($data['name']);
 
             // Générer l'URL (ex: https://tonsite.com/hotel/hotel-ilf-maurice)
-            $url = 'http://192.168.1.170:8000/enregistrement/'. $slug;
+            $url = 'http://192.168.1.178:8000/enregistrement/'. $slug;
             // Générer le QR code avec l’URL
             $filename = 'qrcodes/' . $slug . '.png';
             $qrImage = QrCode::format('png')->size(300)->generate($url);

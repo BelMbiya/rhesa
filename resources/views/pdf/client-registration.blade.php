@@ -118,12 +118,12 @@
     
                         <div class="text-center">
                             <h4 class="text-md font-medium mb-2">Pièce d'identité</h4>
-                            <img src="{{ asset($data['identity_image']) }}" alt="Image d'identité" class="{{ $imageClasses }}">
+                            <img src="{{ Storage::url($data['identity_image']) }}" alt="Image d'identité" class="{{ $imageClasses }}">
                         </div>
     
                         <div class="text-center">
                             <h4 class="text-md font-medium mb-2">Selfie</h4>
-                            <img src="{{ asset($data['selfi']) }}" alt="Selfie" class="{{ $imageClasses }}">
+                            <img src="{{ Storage::url($data['selfi']) }}" alt="Selfie" class="{{ $imageClasses }}">
                         </div>
                     </div>
     

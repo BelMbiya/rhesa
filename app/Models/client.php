@@ -9,8 +9,8 @@ class client extends Model
     
     
     protected $fillable = [
-        'last_name',
-        'first_name',
+        // 'last_name',
+        // 'first_name',
         'gender_id',
         'birth_date',
         'birth_place',

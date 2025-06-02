@@ -192,30 +192,7 @@
             <x-input label="Numero de de la chambre" wire:model="num_chambre" />
             {{-- <x-input label="Nombre de personnes" wire:model="nombre_personnes" type="number" /> --}}
         </div>
-    @elseif ($currentStep === 4)
-        {{-- RECAPUTILATIF DE CHAMPS --}}
-            <h2 class="text-2xl font-bold text-center mb-2">Recaputilatif</h2>
-            <p class="text-center text-gray-600 mb-8">Reverifiez vos informations avant de valoder !</p>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <x-input label="Numéro d'indentité" wire:model="identity_number" disabled/>
-            <x-input label="Moyen de l'enregistrement" wire:model="origin" disabled/>
-            <x-input label="Votre nom" wire:model="Last_name" type="text" disabled/>
-            <x-input label="Votre postom" wire:model="First_name" type="text" disabled/>
-            <x-input label="Date de naissance" wire:model="date_naissance" type="date" disabled />
-            <x-input label="Lieu de naissance" wire:model="lieu_naissance" disabled/>
-            <x-input label="Nationalité" wire:model="nationalite" disabled/>
-                <x-input label="Adresse" wire:model="adresse" disabled/>
-                <x-input label="Téléphone" wire:model="telephone" disabled/>
-                <x-input label="Email" wire:model="email" type="email" disabled/>
-                <x-input label="Profession" wire:model="profession" disabled/>
-                <x-input label="Nom du père" wire:model="father_name" disabled/>
-                <x-input label="Nom de la mère" wire:model="mother_name" disabled/>
-                <x-input label="Enfants de moins de 15ans" wire:model="children_under_15" disabled/>
-                <x-input label="Date d'arrivée" wire:model="date_arrivee" type="date" disabled/>
-                <x-input label="Date de départ" wire:model="date_depart" type="date" disabled/>
-                <x-input label="Motif" wire:model="motif" disabled/>
-                <x-input label="Numero de de la chambre" wire:model="num_chambre" disabled/>
-        </div>
+    
     @endif
 
     <!-- Navigation Buttons -->

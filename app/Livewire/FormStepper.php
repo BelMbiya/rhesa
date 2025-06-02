@@ -41,6 +41,11 @@ class FormStepper extends Component
         $this->genres_id = \App\Models\Gender::all();
     }
 
+    public function render()
+    {
+        return view('livewire.user.form-stepper');
+    }
+
     protected function rules()
     {
         return match ($this->currentStep) {
@@ -52,8 +57,8 @@ class FormStepper extends Component
 
             ],
             2 => [
-                'First_name' => 'required|string|max:30',
-                'Last_name' => 'required|string|max:30',
+                'First_name' => 'nullable|string|max:30',
+                'Last_name' => 'nullable|string|max:30',
                 'prenom' => 'nullable|string|max:30',
                 'gender_id' => 'required|exists:genders,id',
                 'date_naissance' => 'required|date|before:today',
@@ -62,7 +67,6 @@ class FormStepper extends Component
                 'adresse' => 'required|string|max:255',
                 'telephone' => 'required|string|max:15',
                 'email' => 'required|email|max:100',
-                //'etat_civil' => 'required|in:Célibataire,Marié(e),Divorcé(e),Veuf(ve),Séparé(e),Pacsé(e),Union libre',
                 'father_name' => 'required|string|max:30',
                 'mother_name' => 'required|string|max:30',
                 'profession' => 'nullable|string|max:50',
@@ -82,17 +86,11 @@ class FormStepper extends Component
         };
     }
 
-    public function render()
-    {
-        return view('livewire.user.form-stepper');
-    }
-
     public function updated($propertyName)
     {
         // Étape 1 : ne valider que les champs actuels
         if (in_array($propertyName, ['selfi', 'identity_image'])) {
             $this->validateOnly($propertyName, [
-                //'numero_id' => 'required|string|min:5|max:20',
                 'selfi' => 'required|image|max:2048',          // capture directe
                 'identity_image' => 'required|image|max:2048', // capture directe
             ]);
@@ -110,7 +108,7 @@ class FormStepper extends Component
     public function increaseStep()
     {
         $this->validate($this->rules());
-        if ($this->currentStep < 4) {
+        if ($this->currentStep < 3) {
             $this->currentStep++;
         }
     }
@@ -134,6 +132,7 @@ class FormStepper extends Component
 
     public function submit()
     {
+        //dd($this->Last_name, $this->First_name);
         // Créer le client
         $client = Client::create([
             'last_name' => $this->Last_name,
@@ -159,19 +158,19 @@ class FormStepper extends Component
         // Stocker l'ID du client créé
         $this->client_id = $client->id;
 
-        $check_in = $this->date_arrivee && preg_match('/^\d{4}-\d{2}-\d{2}$/', $this->date_arrivee)
-            ? $this->date_arrivee . ' ' . date("H:i:s")
-            : null;
+        // $check_in = $this->date_arrivee && preg_match('/^\d{4}-\d{2}-\d{2}$/', $this->date_arrivee)
+        //     ? $this->date_arrivee . ' ' . date("H:i:s")
+        //     : null;
 
-        $check_out = $this->date_depart && preg_match('/^\d{4}-\d{2}-\d{2}$/', $this->date_depart)
-            ? $this->date_depart . ' 00:00:00'
-            : null;
+        // $check_out = $this->date_depart && preg_match('/^\d{4}-\d{2}-\d{2}$/', $this->date_depart)
+        //     ? $this->date_depart . ' 00:00:00'
+        //     : null;
 
         // Créer le séjour
         $stay = Stay::create([
             'client_id' => $client->id,
             'room_number' => $this->num_chambre,
-            'check_in' => $check_in,
+            'check_in' => date('Y-m-d H:i:s'),
             'check_out' => $check_out,
             'purpose' => $this->motif,
             'arrival_country_date' => $this->arrival_country_date,

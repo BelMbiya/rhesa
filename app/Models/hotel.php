@@ -14,4 +14,13 @@ class hotel extends Model
     {
         return $this->belongsTo(City::class);
     }
+    public function users()
+    {
+        return $this->hasMany(User::class);
+    }
+    public function registrations()
+    {
+        return $this->hasMany(Registration::class);
+    }
+
 }

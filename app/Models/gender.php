@@ -6,5 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class gender extends Model
 {
-    //
+    public function clients()
+    {
+        return $this->hasMany(Client::class);
+    }
 }

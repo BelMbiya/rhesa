@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class stay extends Model
 {
-    
-    
+
+
     protected $fillable = [
         'client_id',
         //'date_arrivee',
@@ -23,5 +23,13 @@ class stay extends Model
         'next_destination',
     ];
 
-    
+    public function client()
+    {
+        return $this->belongsTo(Client::class);
+    }
+    public function registration()
+    {
+        return $this->hasOne(Registration::class);
+    }
+
 }

@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('manager');
             $table->string('geo_position')->nullable();
             $table->string('qr_code')->nullable();
+            $table->string('slug')->nullable();
             $table->foreignId('city_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });

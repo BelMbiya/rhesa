@@ -1,154 +1,198 @@
+{{-- resources/views/pdf/client-registration.blade.php --}}
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Enregistrement Client</title>
+    <title>Certificat client</title>
     <style>
-        body { 
-            font-family: sans-serif; 
-            font-size: 14px; 
-            margin: 0;
-            padding: 20px;
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 11px;
+            color: #1f2937;
+            background: #fff;
+            padding: 16px;
         }
-        .header {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        .header img {
-            height: 60px;
-            margin: 0 15px;
-        }
-        h1, h2 {
-            text-align: center;
-            margin-bottom: 10px;
-        }
-        .date {
-            text-align: center;
-            margin-bottom: 30px;
-            color: #666;
-        }
-        .grid-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-        .full-width {
-            grid-column: span 2;
-        }
-        .input-group {
-            margin-bottom: 15px;
-        }
-        .input-label {
-            display: block;
-            font-size: 12px;
-            color: #666;
-            margin-bottom: 5px;
-        }
-        .input-field {
-            width: 100%;
-            padding: 8px 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            background-color: #f9f9f9;
-            font-size: 14px;
+        table { width: 100%; border-collapse: collapse; }
+        .header { 
+        background: #083f8c; 
+        color: #ffffff; 
+        padding: 20px 25px; 
+        margin-bottom: 20px; 
+        text-align: center;
+        border-radius: 4px; /* Optionnel : léger arrondi pour le style */
+    }
+    
+    .header h1 { 
+        font-size: 18px; 
+        margin: 0 0 6px 0; 
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        font-weight: bold;
+    }
+    
+    .header p { 
+        font-size: 12px; 
+        margin: 0 0 15px 0; 
+        opacity: 0.9;
+        font-style: italic;
+    }
+
+    .logo-container {
+        display: block;
+        margin-top: 10px;
+    }
+
+    .logo-container img {
+        height: 35px; /* Taille réduite pour les logos */
+        margin: 0 12px;
+        display: inline-block;
+        vertical-align: middle;
+        /* Si vos logos ont un fond blanc, ce filtre peut aider à les rendre plus propres sur fond bleu */
+        filter: brightness(0) invert(1); 
+    }
+        .meta { margin-bottom: 10px; }
+        .meta td {
+            border: 1px solid #d1d5db;
+            padding: 6px 8px;
+            background: #f8fafc;
+            font-size: 11px;
         }
         .section-title {
-            grid-column: span 2;
-            margin-top: 20px;
-            margin-bottom: 10px;
-            padding-bottom: 5px;
-            border-bottom: 1px solid #eee;
-            color: #333;
+            background: #e6f0ff;
+            color: #0d3b82;
+            font-weight: bold;
+            padding: 6px 8px;
+            border: 1px solid #c3d5f0;
+            font-size: 11px;
         }
-        .images-container {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-            margin-bottom: 20px;
+        .box { border: 1px solid #dbe2ea; margin-bottom: 10px; }
+        .box-body { padding: 8px; }
+        .info-table th,
+        .info-table td {
+            border: 1px solid #e5e7eb;
+            padding: 5px 7px;
+            text-align: left;
         }
-        .image-box {
-            border: 1px solid #ddd;
-            padding: 10px;
-            border-radius: 4px;
+        .info-table th {
+            width: 42%;
+            background: #f8fafc;
+            font-weight: 600;
+        }
+        .two-col { width: 100%; border-collapse: separate; border-spacing: 8px 0; }
+        .two-col td { vertical-align: top; width: 50%; }
+        .footer { margin-top: 10px; }
+        .footer td {
+            border: 1px solid #d1d5db;
+            background: #f9fafb;
+            padding: 6px 8px;
+            font-size: 10px;
+        }
+        .code-box {
             text-align: center;
-            width: 45%;
+            border: 1px dashed #9fbbe7;
+            background: #f5f9ff;
+            padding: 10px;
+            margin-top: 8px;
+            border-radius: 4px;
         }
-        .image-box img {
-            max-width: 100%;
-            height: auto;
-            margin-top: 10px;
+        .code-box .code {
+            font-size: 18px;
+            font-weight: bold;
+            color: #083f8c;
+            letter-spacing: 3px;
         }
-        .image-box h3 {
-            margin-top: 0;
-            font-size: 16px;
-            color: #333;
-        }
+        .code-box .label { font-size: 10px; color: #6b7280; margin-top: 4px; }
     </style>
 </head>
 <body>
-    <div class="header">
-        <img src="{{ public_path('images/Rhesa_black.png') }}" alt="Rhesa Black Logo">
-        <img src="{{ public_path('images/logomin.png') }}" alt="Logo Min">
+@php
+    $stay        = $client->stays()->latest()->first();
+    $fullName    = trim(($client->first_name ?? '') . ' ' . ($client->last_name ?? ''));
+    $documentId  = 'CERT-' . now()->format('Ymd') . '-' . ($client->identity_number ?? 'N/A');
+    $docDate     = ($reg_date ?? '') . ' ' . ($reg_time ?? '');
+@endphp
+
+{{-- En-tête --}}
+<div class="header">
+
+    
+    <div class="logo-container">
+        {{-- Logos en taille réduite --}}
+        @if(file_exists(storage_path('app/public/logo/Rhesawhite.png')))
+            <img src="{{ storage_path('app/public/logo/Rhesawhite.png') }}" alt="Logo">
+        @endif
+        @if(file_exists(storage_path('app/public/logo/logo_min.png')))
+            <img src="{{ storage_path('app/public/logo/logo_min.png') }}" alt="Logo">
+        @endif
+        
     </div>
-    
-    <div class="bg-gray-100 text-gray-800 print:bg-white print:text-black">
-        <div class="text-center mb-12 mt-8 print:mt-4">
-            <div class="flex justify-center items-center gap-8 flex-wrap mb-6">
-                <img src="{{ asset('images/Rhesa_black.png') }}" alt="Logo Min" class="h-20 w-auto md:h-10">
-                <img src="{{ asset('images/logomin.png') }}" alt="Logo Rhesa" class="h-20 w-auto md:h-10">
+    <h1>Fiche d'Enregistrement Client</h1>
+    <p>{{ $hotel_name ?? 'Hôtel Non Défini' }} &mdash; {{ $docDate }}</p>
+</div>
+
+{{-- Méta --}}
+
+{{-- Deux colonnes --}}
+<table class="two-col">
+    <tr>
+        {{-- Colonne gauche : infos client --}}
+        <td>
+            <div class="box">
+                <div class="section-title">INFORMATIONS DU CLIENT</div>
+                <div class="box-body">
+                    <table class="info-table">
+                        <tr><th>Nom complet</th><td>{{ $fullName }}</td></tr>
+                        <tr><th>N° identité</th><td>{{ $client->identity_number ?? '' }}</td></tr>
+                        <tr><th>Date de naissance</th><td>{{ $client->birth_date ?? '' }}</td></tr>
+                        <tr><th>Lieu de naissance</th><td>{{ $client->birth_place ?? '' }}</td></tr>
+                        <tr><th>Nationalité</th><td>{{ $client->nationality ?? '' }}</td></tr>
+                        <tr><th>Adresse</th><td>{{ $client->permanent_address ?? '' }}</td></tr>
+                        <tr><th>Téléphone</th><td>{{ $client->phone ?? '' }}</td></tr>
+                        <tr><th>Email</th><td>{{ $client->email ?? '' }}</td></tr>
+                        <tr><th>Profession</th><td>{{ $client->profession ?? '' }}</td></tr>
+                        <tr><th>Nom du père</th><td>{{ $client->father_name ?? '' }}</td></tr>
+                        <tr><th>Nom de la mère</th><td>{{ $client->mother_name ?? '' }}</td></tr>
+                        <tr><th>Enfants -15 ans</th><td>{{ $client->children_under_15 ?? '0' }}</td></tr>
+                    </table>
+                </div>
             </div>
-            <h1 class="text-4xl font-bold text-gray-800">Fiches d'enregistrement</h1>
-        </div>
-    
-        <div class="flex justify-center max-w-4xl mx-auto p-4 flex-col lg:flex-row gap-14">
-            <section class="w-full space-y-6 print:w-full">
-    
-                <!-- Bloc Identification -->
-                <div class="bg-white rounded-3xl shadow-md p-6 flex flex-col gap-6 transition hover:shadow-lg print:shadow-none print:border print:border-gray-300">
-                    <h1 class="text-xl font-semibold">Identification</h1>
-                    <p class="text-sm text-gray-600">Numéro d'identité : <b>{{ $data['identity_number'] ?? '' }}</b></p>
-    
-                    <div class="flex flex-col sm:flex-row justify-start items-start gap-8">
-                        @php
-                            $imageClasses = 'w-40 sm:w-48 md:w-56 h-auto mx-auto rounded shadow-sm border border-gray-200';
-                        @endphp
-    
-                        <div class="text-center">
-                            <h4 class="text-md font-medium mb-2">Pièce d'identité</h4>
-                            <img src="{{ Storage::url($data['identity_image']) }}" alt="Image d'identité" class="{{ $imageClasses }}">
-                        </div>
-    
-                        <div class="text-center">
-                            <h4 class="text-md font-medium mb-2">Selfie</h4>
-                            <img src="{{ Storage::url($data['selfi']) }}" alt="Selfie" class="{{ $imageClasses }}">
-                        </div>
-                    </div>
-    
-                    <p class="text-sm text-gray-600">Moyen d'enregistrement : <b>{{ $data['origin'] ?? '' }}</b></p>
+        </td>
+
+        {{-- Colonne droite : séjour + code --}}
+        <td>
+            <div class="box">
+                <div class="section-title">DÉTAILS DU SÉJOUR</div>
+                <div class="box-body">
+                    <table class="info-table">
+                        <tr><th>Hôtel</th><td>{{ $hotel_name ?? '' }}</td></tr>
+                        <tr><th>Date enregistrement</th><td>{{ $reg_date ?? '' }}</td></tr>
+                        <tr><th>Heure enregistrement</th><td>{{ $reg_time ?? '' }}</td></tr>
+                        <tr><th>Chambre</th><td>{{ $stay?->room_number ?? '' }}</td></tr>
+                        <tr><th>Motif</th><td>{{ $stay?->purpose ?? '' }}</td></tr>
+                        <tr><th>Prochaine destination</th><td>{{ $stay?->next_destination ?? '' }}</td></tr>
+                    </table>
                 </div>
-    
-                <!-- Bloc Information -->
-                <div class="bg-white rounded-3xl shadow-md p-6 flex flex-col gap-2 transition hover:shadow-lg print:shadow-none print:border print:border-gray-300">
-                    <h1 class="text-xl font-semibold mb-2">Information</h1>
-                    <p class="text-sm text-gray-600">Nom : <b>{{ $data['First_name'] ?? '' }}</b></p>
-                    <p class="text-sm text-gray-600">Postnom : <b>{{ $data['Last_name'] ?? '' }}</b></p>
-                    <p class="text-sm text-gray-600">Date de naissance : <b>{{ $data['date_naissance'] ?? '' }}</b></p>
-                    <p class="text-sm text-gray-600">Lieu de naissance : <b>{{ $data['lieu_naissance'] ?? '' }}</b></p>
-                    <p class="text-sm text-gray-600">Nationalité : <b>{{ $data['nationalite'] ?? '' }}</b></p>
-                    <p class="text-sm text-gray-600">Adresse : <b>{{ $data['adresse'] ?? '' }}</b></p>
-                    <p class="text-sm text-gray-600">Téléphone : <b>{{ $data['telephone'] ?? '' }}</b></p>
-                    <p class="text-sm text-gray-600">E-mail : <b>{{ $data['email'] ?? '' }}</b></p>
-                    <p class="text-sm text-gray-600">Profession : <b>{{ $data['profession'] ?? '' }}</b></p>
-                    <p class="text-sm text-gray-600">Nom du père : <b>{{ $data['father_name'] ?? '' }}</b></p>
-                    <p class="text-sm text-gray-600">Nom de la mère : <b>{{ $data['mother_name'] ?? '' }}</b></p>
-                    <p class="text-sm text-gray-600">Enfants de moins de 15 ans : <b>{{ $data['children_under_15'] ?? '' }}</b></p>
+            </div>
+
+            <div class="code-box">
+                <div class="code">{{ $client->identity_number ?? '' }}</div>
+                <div class="label">Code dossier</div>
+            </div>
+
+            <div class="box" style="margin-top:10px;">
+                <div class="section-title">SÉCURITÉ ET VÉRIFICATION</div>
+                <div class="box-body" style="font-size:10px; line-height:1.6;">
+                    <p>&#10003; Contrôle visuel des pièces effectué à l'accueil.</p>
+                    <p>&#10003; Traçabilité : date, heure et hôtel conservés.</p>
+                    <p>&#10003; Archivage pour audit et contrôle interne.</p>
                 </div>
-    
-            </section>
-        </div>
-    </div>    
+            </div>
+        </td>
+    </tr>
+</table>
+
+{{-- Pied de page --}}
+
 </body>
 </html>

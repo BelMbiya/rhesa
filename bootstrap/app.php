@@ -11,7 +11,12 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        $middleware->alias([
+            'hotel.manager' => \App\Http\Middleware\RedirectHotelManager::class,
+        ]);
+        $middleware->web(append: [
+            \App\Http\Middleware\RedirectHotelManager::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

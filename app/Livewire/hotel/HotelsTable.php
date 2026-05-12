@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\hotel;
 
 use Illuminate\Support\Str;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -43,27 +43,33 @@ class HotelsTable extends DataTableComponent
                     'class' => 'h-48 w-96 object-scale-down ...',
                 ]),*/
             ButtonGroupColumn::make('Actions')
-                ->attributes(function($row) {
+                ->attributes(function ($row) {
                     return [
                         'class' => 'space-x-2',
                     ];
                 })
                 ->buttons([
                     LinkColumn::make('Voir') // make() has no effect in this case but needs to be set anyway
-                    ->title(fn($row) => 'Voir')
+                        ->title(fn($row) => 'Voir')
                         ->location(fn($row) => route('hotel', Str::slug($row->name)))
-                        ->attributes(function($row) {
+                        ->attributes(function ($row) {
                             return [
                                 'class' => 'underline text-blue-500 hover:no-underline',
                             ];
                         }),
-                    LinkColumn::make('Edit')
+                    LinkColumn::make('Supprimer')
                         ->title(fn($row) => 'Supprimer')
-                        ->location(fn($row) => route('dashboard'))
-                        ->attributes(function($row) {
+                        ->location(fn($row) => route('hotel-delete', ['id' => $row->id]))
+                        ->attributes(fn($row) => [
+                            'onclick' => "return confirm('Confirmer la suppression ?')",
+                            'class' => 'underline text-red-500 hover:no-underline',
+                        ]),
+                    LinkColumn::make('Edit')
+                        ->title(fn($row) => 'Edit')
+                        ->location(fn($row) => route('hotel-update', ['id' => $row->id]))
+                        ->attributes(function ($row) {
                             return [
-                                'target' => '_blank',
-                                'class' => 'underline text-red-500 hover:no-underline',
+                                'class' => 'underline text-green-500 hover:no-underline',
                             ];
                         }),
                 ]),

@@ -1,12 +1,17 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\client;
 
 use App\Models\client;
+use App\Models\hotel;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Barryvdh\DomPDF\Facade\Pdf;
+//use Spatie\Browsershot\Browsershot;
 
+/**
+ * S'occupe d'afficher un client dans un hotel
+ */
 class ClientRegistration extends Component
 {
 
@@ -14,6 +19,10 @@ class ClientRegistration extends Component
     public client $client;
     public $client_id;
     public $data;
+
+    public $hotel_name;
+    public $reg_time;
+    public $reg_date;
     // public $identity_number, $origin, $Last_name, $First_name, $gender_id,
     //     $date_naissance, $lieu_naissance, $nationalite, $adresse;
     // public $telephone, $email, $father_name, $mother_name, $profession, $children_under_15,
@@ -24,6 +33,22 @@ class ClientRegistration extends Component
     public function mount($id)
     {
         $this->client = client::findOrFail($id);
+        $this->hotel_name = Hotel::findOrFail(
+            optional($this->client->stays()->latest()->first()?->registration)->hotel_id
+        )?->name;
+        $this->reg_time = optional($this->client->stays()->latest()->first()?->registration)->registration_time;
+        $this->reg_date = optional($this->client->stays()->latest()->first()?->registration)->registration_date;
+    }
+
+
+    /**
+     * Exporte un enregistrement de client en PDF
+     * @return \Illuminate\Http\Response
+     */
+    public function exportToPdf()
+    {
+        //dd($this->hotel_name);
+
         $this->data = [
             'identity_number' => $this->client->identity_number,
             'origin' => $this->client->origin,
@@ -55,35 +80,36 @@ class ClientRegistration extends Component
             // 'signature' => $this->client->signature,
             'identity_image' => $this->client->identity_image,
             'selfi' => $this->client->selfi,
+            'hotel_name' => $this->hotel_name,
+            'reg_time' => $this->reg_time,
+            'reg_date' => $this->reg_date,
         ];
-        
-    }
-
-
-    public function exportToPdf()
-    {
         //dd($this->data);
+
         $client = $this->client;
         if (!$client) {
             abort(404, 'Client introuvable');
         }
 
-        $data['id'] = $client->id;
-        // $data['Last_name'] = $client->Last_name;
-        // $data['First_name'] = $client->First_name;
-        //$data['identity_image'] = 'storage/' . $this->client->identity_image;
-        //$data['selfi'] = 'storage/' . $this->client->selfi;
-        // $data['gender_name'] = \App\Models\Gender::find($this->gender_id)?->name;
-        //ini_set('display_errors', 1);
-        //error_reporting(E_ALL);
-
+        //     $data['id'] = $client->id;
+        //     Pdf::view('pdfs.invoice', ['invoice' => $invoice])
+        // ->format('a4')
+        // ->save('invoice.pdf');
+        //ini_set('memory_limit', '512M');
         $pdf = Pdf::loadView('pdf.client-registration', [
-              'data' => $this->data,
-              'client' => $this->client,
-        ]);
+            'data' => $this->data,
+            'client' => $this->client,
+            'hotel_name' => $this->hotel_name,
+            'reg_time' => $this->reg_time,
+            'reg_date' => $this->reg_date,
+            'isPdf' => true,
+        ])->setPaper('a4', 'portrait');
 
-        //$pdf = Pdf::loadView('pdf.client-registration', $this->data);
-        return $pdf->download('fiche-client.pdf');
+        return $pdf->download('client-registration.pdf');
+
+        //$pdf = Pdf::loadView('pdf.client-registration', $this->data
+        //return $pdf->download('client-registration.pdf');
+        //return Browsershot::url(route('client-registration', $client->id))->save('example.pdf');
     }
 
 

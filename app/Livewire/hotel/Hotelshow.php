@@ -1,10 +1,13 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\hotel;
 
 use App\Models\hotel;
 use Livewire\Component;
 
+/**
+ * Affiche un hotel
+ */
 class Hotelshow extends Component
 {
     public string $slug;
@@ -15,9 +18,9 @@ class Hotelshow extends Component
     }
     public function render()
     {
-
+       // dd($this->slug);
         $hotel = hotel::where('slug', $this->slug)->first();
-        return view('livewire.hotelshow', [
+        return view('livewire.hotel.hotelshow', [
             'hotel' => $hotel
         ]);
     }
